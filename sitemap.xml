@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yqsailor.github.io/2018/09/12/ipfs/</loc>
+    <loc>http://yqsailor.github.io/2018/09/13/ipfs/</loc>
     
-    <lastmod>2018-09-13T06:01:53.309Z</lastmod>
+    <lastmod>2018-09-13T14:20:58.491Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yqsailor.github.io/2018/09/12/hexo/</loc>
+    
+    <lastmod>2018-09-13T14:20:41.224Z</lastmod>
     
   </url>
   
@@ -19,13 +26,6 @@
     <loc>http://yqsailor.github.io/categories/index.html</loc>
     
     <lastmod>2018-09-12T12:43:14.658Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yqsailor.github.io/2018/09/12/hello-world/</loc>
-    
-    <lastmod>2018-09-12T12:39:57.762Z</lastmod>
     
   </url>
   

@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title><![CDATA[IPFS]]></title>
-    <url>%2F2018%2F09%2F12%2Fipfs%2F</url>
+    <url>%2Fipns%2F2018%2F09%2F12%2Fipfs%2F</url>
     <content type="text"><![CDATA[IPFS的全称是InterPlanetary File System星际文件系统，是一个点对点的网络超媒体协议。它的目标是成为更快、更安全、更开放的下一代互联网。 IPFS介绍IPFS尝试解决HTTP目前存在的四个问题：. 服务低效，成本高。这也是大部分P2P服务比中心化服务器优秀的地方。 . 网络服务受限于供应商，文件具有无法永久保存的风险，更无法历史回溯。 . 中心化的网络权力过于集中，网络控制和监管某些程度上限制了科技创新。 . 互联网服务大多依赖于骨干网络，一旦宕机大部分服务将无法使用。 IPFS的野心是取代现在的HTTP，去创建一个全新的去中心化网络。 在IPFS网络上，每个IPFS上的文件都具备一个唯一的哈希码。IPFS同时具备了文件去重和历史版本的功能，每个网络节点会存储自己感兴趣的内容，并且索引其它内容的位置，用户可以通过哈希码来寻找到每个文件的具体位置。此外IPFS本身还自带一个IPNS的域名，可以把你的内容和你的个人域名进行绑定。 IPFS的下载与安装可参考官网：https://ipfs.io/docs/install，备注：目前需要科学上网才能访问 本文以mac homebrew 安装为例进行说明，在terminal内输入以下命令进行下载与安装。本文时间(2018.9.13)的最新版本为v0.4.17，123tar xvfz go-ipfs_v0.4.14_linux-amd64.tar.gzcd go-ipfs./install.sh 安装后使用help命令，可以测试是否成功。ipfs help IPFS的使用：启动使用参考：https://ipfs.io/docs/getting-started 首先进行初始化，创建一个全局的本地仓库与配置文件。ipfs init 然后需要开启IPFS的进程从而与网络保持连接状态。这里加上&amp;是为了让进程在后台运行，可以在开启后同时按CTRL键C键回到之前界面。ipfs daemon &amp; 可以通过下面的命令查看我们在IPFS网络上已经连接的节点ipfs swarm peers IPFS的使用：上线这里讲解一下把你的GitHub Pages个人主页上传到IPFS网络上，GitHub确实是一个非常好的平台，但一个完全分布式的网络似乎非常具有吸引力。 首先第一步先克隆你的主页项目到本地。git clone &lt;git-gages-repo&gt; 通过add命令，直接把项目直接添加到IPFS网络。ipfs add -r &lt;git-gages-repo&gt; 完成这一步后，你应该会在Terminal里看到打印了一串哈希码，类似于：QmP4AUYoXLpF1WXifkfyDCe6mpiXgsUcbBFXyWuEZtUgFz，你需要把它记录下来，它标识了你的文件在网路上的位置。 现在你的文件已经在IPFS上了，网络为了避免垃圾资源过度的情况会在一段时间之后清空数据。为了保证我们的文件能够一直保持在IPFS网络上，我们需要执行pin命令，这样只要你的IPFS进程还开启着，数据就不会被垃圾回收。ipfs pin add -r &lt;your-hash&gt; Done！现在你的个人网站已经搭建在了一个完全去中心化的网络上了。你可以通过网址 https://gateway.ipfs.io/ipfs/ 访问你的个人主页。另外要注意的是，IPFS的网关目前需要科学上网才能连接。 下面是我自己的个人主页在IPFS上的版本。 https://gateway.ipfs.io/ipfs/QmP4AUYoXLpF1WXifkfyDCe6mpiXgsUcbBFXyWuEZtUgFz/​gateway.ipfs.io 另外，如果需要绑定个人域名，可查阅官方手册的IPNS相关内容。]]></content>
       <categories>
         <category>Web</category>
@@ -14,7 +14,7 @@
   </entry>
   <entry>
     <title><![CDATA[Hello World]]></title>
-    <url>%2F2018%2F09%2F12%2Fhello-world%2F</url>
+    <url>%2Fipns%2F2018%2F09%2F12%2Fhello-world%2F</url>
     <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" Morecreate new info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
       <categories>
         <category>Hexo</category>

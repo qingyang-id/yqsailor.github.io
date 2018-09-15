@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Courier New:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="以太坊,区块链,ERC20," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Sailor's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="ERC20：Ethereum Request for Comments 20，是一个基于以太坊代币的接口标准（协议）。所有符合 ERC-20 标准的代币都能立即兼容以太坊钱包，它能让用户和交易所，都能非常方便的管理多种代币，转账、存储、ICO 等等。 OpenZeppelin 的 Token 中实现了 ERC20 的一个安全的合约代码，本篇主要来分析一下源码，了解一下 ERC20 的实现，由于代码">
+<meta name="keywords" content="以太坊,区块链,ERC20">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenZeppelin ERC20源码分析">
+<meta property="og:url" content="http://yqsailor.github.io/2018/09/15/erc20/index.html">
+<meta property="og:site_name" content="Sailor&#39;s Blog">
+<meta property="og:description" content="ERC20：Ethereum Request for Comments 20，是一个基于以太坊代币的接口标准（协议）。所有符合 ERC-20 标准的代币都能立即兼容以太坊钱包，它能让用户和交易所，都能非常方便的管理多种代币，转账、存储、ICO 等等。 OpenZeppelin 的 Token 中实现了 ERC20 的一个安全的合约代码，本篇主要来分析一下源码，了解一下 ERC20 的实现，由于代码">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yqsailor.github.io/2018/09/15/erc20/images/open-zeppeline-erc20.png">
+<meta property="og:updated_time" content="2018-09-15T09:06:16.932Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenZeppelin ERC20源码分析">
+<meta name="twitter:description" content="ERC20：Ethereum Request for Comments 20，是一个基于以太坊代币的接口标准（协议）。所有符合 ERC-20 标准的代币都能立即兼容以太坊钱包，它能让用户和交易所，都能非常方便的管理多种代币，转账、存储、ICO 等等。 OpenZeppelin 的 Token 中实现了 ERC20 的一个安全的合约代码，本篇主要来分析一下源码，了解一下 ERC20 的实现，由于代码">
+<meta name="twitter:image" content="http://yqsailor.github.io/2018/09/15/erc20/images/open-zeppeline-erc20.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yqsailor.github.io/2018/09/15/erc20/"/>
+
+
+
+
+
+  <title>OpenZeppelin ERC20源码分析 | Sailor's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <a href="https://github.com/yqsailor/blog" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sailor's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Stay Hungry,Stay Foolish</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yqsailor.github.io/2018/09/15/erc20/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sailor">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sailor's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OpenZeppelin ERC20源码分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-15T17:45:05+08:00">
+                2018-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/区块链/" itemprop="url" rel="index">
+                    <span itemprop="name">区块链</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>ERC20：Ethereum Request for Comments 20，是一个基于以太坊代币的接口标准（协议）。所有符合 ERC-20 标准的代币都能立即兼容以太坊钱包，它能让用户和交易所，都能非常方便的管理多种代币，转账、存储、ICO 等等。</p>
+<p>OpenZeppelin 的 Token 中实现了 ERC20 的一个安全的合约代码，本篇主要来分析一下源码，了解一下 ERC20 的实现，由于代码之间的调用可能略复杂，直接每个文件每个文件的来看会有点绕，我直接画了一个继承和调用关系的思维导图，可以帮助更容易地看源码。</p>
+<img src="/2018/09/15/erc20/images/open-zeppeline-erc20.png" title="OpenZeppeline ERC20">
+<a id="more"></a>
+<h1 id="ERC20Basic-sol"><a href="#ERC20Basic-sol" class="headerlink" title="ERC20Basic.sol"></a>ERC20Basic.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">contract ERC20Basic &#123;</span><br><span class="line">  function totalSupply() public view returns (uint256);</span><br><span class="line">  function balanceOf(address who) public view returns (uint256);</span><br><span class="line">  function transfer(address to, uint256 value) public returns (bool);</span><br><span class="line">  event Transfer(address indexed from, address indexed to, uint256 value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ERC20Basic 合约主要定义了 ERC20 的基本接口，定义了必须要实现的方法:</p>
+<p>totalSupply 返回总共发行量<br>balanceOf 查询指定 address 的余额<br>transfer 发送指定数目的 token 到指定账户，同时发送后需要触发Transfer事件<br>Transfer事件,任何 token 发送发生时，必须触发该事件，即使是 0 额度。 当一个 token 合约创建时，应该触发一个 Transfer 事件，token 的发送方是 0x0，也就是说凭空而来的 token，简称空气币。</p>
+<h1 id="ERC20-sol"><a href="#ERC20-sol" class="headerlink" title="ERC20.sol"></a>ERC20.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./ERC20Basic.sol&quot;;</span><br><span class="line"></span><br><span class="line">contract ERC20 is ERC20Basic &#123;</span><br><span class="line">  function allowance(address owner, address spender)</span><br><span class="line">    public view returns (uint256);</span><br><span class="line"></span><br><span class="line">  function transferFrom(address from, address to, uint256 value)</span><br><span class="line">    public returns (bool);</span><br><span class="line"></span><br><span class="line">  function approve(address spender, uint256 value) public returns (bool);</span><br><span class="line">  event Approval(</span><br><span class="line">    address indexed owner,</span><br><span class="line">    address indexed spender,</span><br><span class="line">    uint256 value</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ERC20 合约继承了 ERC20Basic，另外定义了 approve 相关的方法:</p>
+<p>allowance 获取指定用户的批准额度，控制代币的交易，如可交易账号及资产, 控制 Token 的流通<br>transferFrom 从一个地址向另外一个地址转账指定额度的 token，这个方法可以理解为一个收款流程，允许合约来代表 token 持有者发送代币。比如，合约可以帮助你向另外一个人发送 token 或者索要 token。前提是 token 拥有者必须要通过某些机制对这个请求进行确认，比如通过 MetaMask 进行 confirm。否则，执行将失败。 跟 transfer 一样，即使发送 0 代币，也要触发Transfer事件。<br>approve 批准额度，允许一个账户最多能从你的账户你取现指定额度。重复调用时，以最后一次的额度为主。为了防止攻击，最开始这个额度必须设置为 0。<br>Approval事件，当 approve 被调用时，需要触发该事件。</p>
+<h1 id="DetailedERC20-sol"><a href="#DetailedERC20-sol" class="headerlink" title="DetailedERC20.sol"></a>DetailedERC20.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./ERC20.sol&quot;;</span><br><span class="line"></span><br><span class="line">contract DetailedERC20 is ERC20 &#123;</span><br><span class="line">  string public name;</span><br><span class="line">  string public symbol;</span><br><span class="line">  uint8 public decimals;</span><br><span class="line"></span><br><span class="line">  constructor(string _name, string _symbol, uint8 _decimals) public &#123;</span><br><span class="line">    name = _name;</span><br><span class="line">    symbol = _symbol;</span><br><span class="line">    decimals = _decimals;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>DetailedERC20 主要定义了 token 的展示信息:</p>
+<p>name token 的名称,比如”XXXToken”<br>symbol token 的符号,比如”XXX”<br>decimals token 精确的小数点位数，比如 18</p>
+<h1 id="BasicToken-sol"><a href="#BasicToken-sol" class="headerlink" title="BasicToken.sol"></a>BasicToken.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./ERC20Basic.sol&quot;;</span><br><span class="line">import &quot;../../math/SafeMath.sol&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title 实现ERC20基本合约的接口</span><br><span class="line"> * @dev 基本的StandardToken，不包含allowances.</span><br><span class="line"> */</span><br><span class="line">contract BasicToken is ERC20Basic &#123;</span><br><span class="line">  using SafeMath for uint256;</span><br><span class="line"></span><br><span class="line">  mapping(address =&gt; uint256) balances;</span><br><span class="line"></span><br><span class="line">  uint256 totalSupply_;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">  * @dev 返回存在的token总数</span><br><span class="line">  */</span><br><span class="line">  function totalSupply() public view returns (uint256) &#123;</span><br><span class="line">    return totalSupply_;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">  * @dev 给特定的address转token</span><br><span class="line">  * @param _to 要转账到的address</span><br><span class="line">  * @param _value 要转账的金额</span><br><span class="line">  */</span><br><span class="line">  function transfer(address _to, uint256 _value) public returns (bool) &#123;</span><br><span class="line">    //做相关的合法验证</span><br><span class="line">    require(_to != address(0));</span><br><span class="line">    require(_value &lt;= balances[msg.sender]);</span><br><span class="line">    // msg.sender余额中减去额度，_to余额加上相应额度</span><br><span class="line">    balances[msg.sender] = balances[msg.sender].sub(_value);</span><br><span class="line">    balances[_to] = balances[_to].add(_value);</span><br><span class="line">    //触发Transfer事件</span><br><span class="line">    emit Transfer(msg.sender, _to, _value);</span><br><span class="line">    return true;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">  * @dev 获取指定address的余额</span><br><span class="line">  * @param _owner 查询余额的address.</span><br><span class="line">  * @return An uint256 representing the amount owned by the passed address.</span><br><span class="line">  */</span><br><span class="line">  function balanceOf(address _owner) public view returns (uint256) &#123;</span><br><span class="line">    return balances[_owner];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过SafeMath来做运算很重要，在我们自己写合约的时候也尽量使用，可以避免一些计算过程的溢出等安全问题。</p>
+<h1 id="StandardToken-sol"><a href="#StandardToken-sol" class="headerlink" title="StandardToken.sol"></a>StandardToken.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./BasicToken.sol&quot;;</span><br><span class="line">import &quot;./ERC20.sol&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title 标准 ERC20 token</span><br><span class="line"> *</span><br><span class="line"> * @dev 实现基础的标准token</span><br><span class="line"> * @dev https://github.com/ethereum/EIPs/issues/20</span><br><span class="line"> * @dev Based on code by FirstBlood: https://github.com/Firstbloodio/token/blob/master/smart_contract/FirstBloodToken.sol</span><br><span class="line"> */</span><br><span class="line">contract StandardToken is ERC20, BasicToken &#123;</span><br><span class="line">  mapping (address =&gt; mapping (address =&gt; uint256)) internal allowed;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 从一个地址向另外一个地址转token</span><br><span class="line">   * @param _from 转账的from地址</span><br><span class="line">   * @param _to address 转账的to地址</span><br><span class="line">   * @param _value uint256 转账token数量</span><br><span class="line">   */</span><br><span class="line">  function transferFrom(</span><br><span class="line">    address _from,</span><br><span class="line">    address _to,</span><br><span class="line">    uint256 _value</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">    returns (bool)</span><br><span class="line">  &#123;</span><br><span class="line">    // 做合法性检查</span><br><span class="line">    require(_to != address(0));</span><br><span class="line">    require(_value &lt;= balances[_from]);</span><br><span class="line">    require(_value &lt;= allowed[_from][msg.sender]);</span><br><span class="line">    //_from余额减去相应的金额</span><br><span class="line">    //_to余额加上相应的金额</span><br><span class="line">    //msg.sender可以从账户_from中转出的数量减少_value</span><br><span class="line">    balances[_from] = balances[_from].sub(_value);</span><br><span class="line">    balances[_to] = balances[_to].add(_value);</span><br><span class="line">    allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);</span><br><span class="line">    // 触发Transfer事件</span><br><span class="line">    emit Transfer(_from, _to, _value);</span><br><span class="line">    return true;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 批准传递的address以代表msg.sender花费指定数量的token</span><br><span class="line">   *</span><br><span class="line">   * Beware that changing an allowance with this method brings the risk that someone may use both the old</span><br><span class="line">   * and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this</span><br><span class="line">   * race condition is to first reduce the spender&apos;s allowance to 0 and set the desired value afterwards:</span><br><span class="line">   * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729</span><br><span class="line">   * @param _spender 花费资金的地址</span><br><span class="line">   * @param _value 可以被花费的token数量</span><br><span class="line">   */</span><br><span class="line">  function approve(address _spender, uint256 _value) public returns (bool) &#123;</span><br><span class="line">    //记录msg.sender允许_spender动用的token</span><br><span class="line">    allowed[msg.sender][_spender] = _value;</span><br><span class="line">    //触发Approval事件</span><br><span class="line">    emit Approval(msg.sender, _spender, _value);</span><br><span class="line">    return true;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 函数检查所有者允许的_spender花费的token数量</span><br><span class="line">   * @param _owner address 资金所有者地址.</span><br><span class="line">   * @param _spender address 花费资金的spender的地址.</span><br><span class="line">   * @return A uint256 指定_spender仍可用token的数量。</span><br><span class="line">   */</span><br><span class="line">  function allowance(</span><br><span class="line">    address _owner,</span><br><span class="line">    address _spender</span><br><span class="line">   )</span><br><span class="line">    public</span><br><span class="line">    view</span><br><span class="line">    returns (uint256)</span><br><span class="line">  &#123;</span><br><span class="line">    //允许_spender从_owner中转出的token数</span><br><span class="line">    return allowed[_owner][_spender];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 增加所有者允许_spender花费代币的数量。</span><br><span class="line">   *</span><br><span class="line">   * allowed[_spender] == 0时approve应该被调用. 增加allowed值最好使用此函数避免2此调用（等待知道第一笔交易被挖出）</span><br><span class="line">   * From MonolithDAO Token.sol</span><br><span class="line">   * @param _spender 花费资金的地址</span><br><span class="line">   * @param _addedValue 用于增加允许动用的token牌数量</span><br><span class="line">   */</span><br><span class="line">  function increaseApproval(</span><br><span class="line">    address _spender,</span><br><span class="line">    uint _addedValue</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">    returns (bool)</span><br><span class="line">  &#123;</span><br><span class="line">    //在之前允许的数量上增加_addedValue</span><br><span class="line">    allowed[msg.sender][_spender] = (</span><br><span class="line">      allowed[msg.sender][_spender].add(_addedValue));</span><br><span class="line">    //触发Approval事件</span><br><span class="line">    emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);</span><br><span class="line">    return true;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 减少所有者允许_spender花费代币的数量</span><br><span class="line">   *</span><br><span class="line">   * allowed[_spender] == 0时approve应该被调用. 减少allowed值最好使用此函数避免2此调用（等待知道第一笔交易被挖出）</span><br><span class="line">   * From MonolithDAO Token.sol</span><br><span class="line">   * @param _spender  花费资金的地址</span><br><span class="line">   * @param _subtractedValue 用于减少允许动用的token牌数量</span><br><span class="line">   */</span><br><span class="line">  function decreaseApproval(</span><br><span class="line">    address _spender,</span><br><span class="line">    uint _subtractedValue</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">    returns (bool)</span><br><span class="line">  &#123;</span><br><span class="line">    uint oldValue = allowed[msg.sender][_spender];</span><br><span class="line">    if (_subtractedValue &gt; oldValue) &#123;</span><br><span class="line">    //减少的数量少于之前允许的数量，则清零</span><br><span class="line">      allowed[msg.sender][_spender] = 0;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">    //减少对应的_subtractedValue数量</span><br><span class="line">      allowed[msg.sender][_spender] = oldValue.sub(_subtractedValue);</span><br><span class="line">    &#125;</span><br><span class="line">    //触发Approval事件</span><br><span class="line">    emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);</span><br><span class="line">    return true;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面合约定义的 mapping allowed，它用来记录某个地址允许另外一个地址动用多少 token。假设钱包地址为 B，有另外一个合约其合约地址为 C，合约 C 会通过支付 XXX Token 来做一些事情，根据 ERC20 的定义，每个地址只能操作属于自己的 Token，则合约 C 无法直接使用 B 地址所拥有的 Token，这时候 allowed Mapping 就派上用场了，它上面可以记录一个允许操作值，像是「B 钱包地址允许 C 合约地址动用属于 B 钱包地址的 1000 XXX Token」，以 Mapping 的结构来说标记为「B =&gt; C =&gt; 1000」</p>
+<h1 id="BurnableToken-sol"><a href="#BurnableToken-sol" class="headerlink" title="BurnableToken.sol"></a>BurnableToken.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./BasicToken.sol&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title 可销毁 Token</span><br><span class="line"> * @dev Token可以被不可逆转地销毁</span><br><span class="line"> */</span><br><span class="line">contract BurnableToken is BasicToken &#123;</span><br><span class="line"></span><br><span class="line">  event Burn(address indexed burner, uint256 value);</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 销毁指定数量的token.</span><br><span class="line">   * @param _value 被销毁的token数量.</span><br><span class="line">   */</span><br><span class="line">  function burn(uint256 _value) public &#123;</span><br><span class="line">    _burn(msg.sender, _value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function _burn(address _who, uint256 _value) internal &#123;</span><br><span class="line">    require(_value &lt;= balances[_who]);</span><br><span class="line">    //不需要验证value &lt;= totalSupply，因为这意味着发送者的余额大于总供应量，这应该是断言失败</span><br><span class="line">    balances[_who] = balances[_who].sub(_value);</span><br><span class="line">    totalSupply_ = totalSupply_.sub(_value);</span><br><span class="line">    emit Burn(_who, _value);</span><br><span class="line">    emit Transfer(_who, address(0), _value);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该合约比较简单，就是调用者可以销毁一定数量的 token，然后 totalSupply 减去对应销毁的数量</p>
+<h1 id="StandardBurnableToken-sol"><a href="#StandardBurnableToken-sol" class="headerlink" title="StandardBurnableToken.sol"></a>StandardBurnableToken.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./BurnableToken.sol&quot;;</span><br><span class="line">import &quot;./StandardToken.sol&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title 标准可销毁token</span><br><span class="line"> * @dev 将burnFrom方法添加到ERC20实现中</span><br><span class="line"> */</span><br><span class="line">contract StandardBurnableToken is BurnableToken, StandardToken &#123;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 从目标地址销毁特定数量的token并减少允许量</span><br><span class="line">   * @param _from address token所有者地址</span><br><span class="line">   * @param _value uint256 被销毁的token数量</span><br><span class="line">   */</span><br><span class="line">  function burnFrom(address _from, uint256 _value) public &#123;</span><br><span class="line">    require(_value &lt;= allowed[_from][msg.sender]);</span><br><span class="line">    // Should https://github.com/OpenZeppelin/zeppelin-solidity/issues/707 be accepted,</span><br><span class="line">    // 此方法需要触发具有更新批准的事件。</span><br><span class="line">    allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);</span><br><span class="line">    _burn(_from, _value);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="MintableToken-sol"><a href="#MintableToken-sol" class="headerlink" title="MintableToken.sol"></a>MintableToken.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./StandardToken.sol&quot;;</span><br><span class="line">import &quot;../../ownership/Ownable.sol&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title 可增发 token</span><br><span class="line"> * @dev 简单的可增发的 ERC20 Token 示例</span><br><span class="line"> * @dev Issue: * https://github.com/OpenZeppelin/openzeppelin-solidity/issues/120</span><br><span class="line"> * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/MintableToken.sol</span><br><span class="line"> */</span><br><span class="line">contract MintableToken is StandardToken, Ownable &#123;</span><br><span class="line">  event Mint(address indexed to, uint256 amount);</span><br><span class="line">  event MintFinished();</span><br><span class="line">  //初始化增发状态为false</span><br><span class="line">  bool public mintingFinished = false;</span><br><span class="line"></span><br><span class="line">  modifier canMint() &#123;</span><br><span class="line">    // 检查没有增发结束</span><br><span class="line">    require(!mintingFinished);</span><br><span class="line">    _;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  modifier hasMintPermission() &#123;</span><br><span class="line">    //owner只能为msg.sender</span><br><span class="line">    require(msg.sender == owner);</span><br><span class="line">    _;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 增发token方法</span><br><span class="line">   * @param _to 获取增发token的地址_to.</span><br><span class="line">   * @param _amount 增发的token数量.</span><br><span class="line">   * @return A boolean that indicates if the operation was successful.</span><br><span class="line">   */</span><br><span class="line">  function mint(</span><br><span class="line">    address _to,</span><br><span class="line">    uint256 _amount</span><br><span class="line">  )</span><br><span class="line">    hasMintPermission</span><br><span class="line">    canMint</span><br><span class="line">    public</span><br><span class="line">    returns (bool)</span><br><span class="line">  &#123;</span><br><span class="line">    // 总发行量增加_amount数量的token</span><br><span class="line">    totalSupply_ = totalSupply_.add(_amount);</span><br><span class="line">    // 获取增发的地址增加_amount数量的token</span><br><span class="line">    balances[_to] = balances[_to].add(_amount);</span><br><span class="line">    // 触发增发事件</span><br><span class="line">    emit Mint(_to, _amount);</span><br><span class="line">    // 触发Transfer事件</span><br><span class="line">    emit Transfer(address(0), _to, _amount);</span><br><span class="line">    return true;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 停止增发新token.</span><br><span class="line">   * @return True if the operation was successful.</span><br><span class="line">   */</span><br><span class="line">  function finishMinting() onlyOwner canMint public returns (bool) &#123;</span><br><span class="line">    // 改变增发状态为已完成</span><br><span class="line">    mintingFinished = true;</span><br><span class="line">    // 触发增发已完成事件</span><br><span class="line">    emit MintFinished();</span><br><span class="line">    return true;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>增发 token 的合约也很简单，就是通过增发一定量的 token 给对应的 address，并给总发行量增加对应的增发 token，可以通过调用finishMinting来完成增发。</p>
+<h1 id="CappedToken-sol"><a href="#CappedToken-sol" class="headerlink" title="CappedToken.sol"></a>CappedToken.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./MintableToken.sol&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title 上限 token</span><br><span class="line"> * @dev 设置一个顶的可增发token.</span><br><span class="line"> */</span><br><span class="line">contract CappedToken is MintableToken &#123;</span><br><span class="line"></span><br><span class="line">  uint256 public cap;</span><br><span class="line"></span><br><span class="line">  constructor(uint256 _cap) public &#123;</span><br><span class="line">    require(_cap &gt; 0);</span><br><span class="line">    cap = _cap;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 增发token</span><br><span class="line">   * @param _to 获取增发token的地址_to.</span><br><span class="line">   * @param _amount 增发token数量.</span><br><span class="line">   * @return A boolean that indicates if the operation was successful.</span><br><span class="line">   */</span><br><span class="line">  function mint(</span><br><span class="line">    address _to,</span><br><span class="line">    uint256 _amount</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">    returns (bool)</span><br><span class="line">  &#123;</span><br><span class="line">    // 验证总发行量+增发量小于所设置的上限</span><br><span class="line">    require(totalSupply_.add(_amount) &lt;= cap);</span><br><span class="line">    // 调用父合约的增发方法</span><br><span class="line">    return super.mint(_to, _amount);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CappedToken 也很简单，就是在可增发合约上加了一个”cap”，来限制增发的上限</p>
+<h1 id="RBACMintableToken-sol"><a href="#RBACMintableToken-sol" class="headerlink" title="RBACMintableToken.sol"></a>RBACMintableToken.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./MintableToken.sol&quot;;</span><br><span class="line">import &quot;../../ownership/rbac/RBAC.sol&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title RBACMintableToken</span><br><span class="line"> * @author Vittorio Minacori (@vittominacori)</span><br><span class="line"> * @dev Mintable Token, with RBAC minter permissions</span><br><span class="line"> */</span><br><span class="line">contract RBACMintableToken is MintableToken, RBAC &#123;</span><br><span class="line">  /**</span><br><span class="line">   * 指定一个增发者的常量名.</span><br><span class="line">   */</span><br><span class="line">  string public constant ROLE_MINTER = &quot;minter&quot;;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 重写Mintable token合约的 modifier，增加角色有关的逻辑</span><br><span class="line">   */</span><br><span class="line">  modifier hasMintPermission() &#123;</span><br><span class="line">    // 调用RBAC合约中的角色检查</span><br><span class="line">    checkRole(msg.sender, ROLE_MINTER);</span><br><span class="line">    _;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 将一个地址添加为可增发者角色</span><br><span class="line">   * @param minter address</span><br><span class="line">   */</span><br><span class="line">  function addMinter(address minter) onlyOwner public &#123;</span><br><span class="line">    addRole(minter, ROLE_MINTER);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 将一个地址移除可增发者角色</span><br><span class="line">   * @param minter address</span><br><span class="line">   */</span><br><span class="line">  function removeMinter(address minter) onlyOwner public &#123;</span><br><span class="line">    removeRole(minter, ROLE_MINTER);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>RBACMintableToken 合约将增发操作中添加了 RBAC 逻辑，就是角色权限管理的逻辑，将一个地址这是为增发者角色，也可以移除一个地址的增发者角色，只有拥有”minter”角色的 address 才有权限增发 token</p>
+<h1 id="SafeERC20-sol"><a href="#SafeERC20-sol" class="headerlink" title="SafeERC20.sol"></a>SafeERC20.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./ERC20Basic.sol&quot;;</span><br><span class="line">import &quot;./ERC20.sol&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title SafeERC20</span><br><span class="line"> * @dev 围绕ERC20操作发生故障的包装程序.</span><br><span class="line"> * 可以在合约中通过这样使用这个库 `using SafeERC20 for ERC20;` 来使用安全的操作`token.safeTransfer(...)`</span><br><span class="line"> */</span><br><span class="line">library SafeERC20 &#123;</span><br><span class="line">  function safeTransfer(ERC20Basic token, address to, uint256 value) internal &#123;</span><br><span class="line">    require(token.transfer(to, value));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function safeTransferFrom(</span><br><span class="line">    ERC20 token,</span><br><span class="line">    address from,</span><br><span class="line">    address to,</span><br><span class="line">    uint256 value</span><br><span class="line">  )</span><br><span class="line">    internal</span><br><span class="line">  &#123;</span><br><span class="line">    require(token.transferFrom(from, to, value));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function safeApprove(ERC20 token, address spender, uint256 value) internal &#123;</span><br><span class="line">    require(token.approve(spender, value));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SafeERC20 是一个 ERC20 的安全操作库，在下面的TokenTimelock锁定期后释放 token 的合约中我们可以看到用法</p>
+<h1 id="TokenTimelock-sol"><a href="#TokenTimelock-sol" class="headerlink" title="TokenTimelock.sol"></a>TokenTimelock.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./SafeERC20.sol&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title TokenTimelock 锁定期释放token</span><br><span class="line"> * @dev TokenTimelock 是一个令token持有人合同，将允许一个受益人在给定的发布时间之后提取token</span><br><span class="line"> */</span><br><span class="line">contract TokenTimelock &#123;</span><br><span class="line">  //这里用到了上面的SafeERC20</span><br><span class="line">  using SafeERC20 for ERC20Basic;</span><br><span class="line"></span><br><span class="line">  // ERC20 basic token contract being held</span><br><span class="line">  ERC20Basic public token;</span><br><span class="line"></span><br><span class="line">  // token被释放后的受益人address</span><br><span class="line">  address public beneficiary;</span><br><span class="line"></span><br><span class="line">  // token可以被释放的时间戳</span><br><span class="line">  uint256 public releaseTime;</span><br><span class="line">  // 对token，受益人address和释放时间初始化</span><br><span class="line">  constructor(</span><br><span class="line">    ERC20Basic _token,</span><br><span class="line">    address _beneficiary,</span><br><span class="line">    uint256 _releaseTime</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">  &#123;</span><br><span class="line">    require(_releaseTime &gt; block.timestamp);</span><br><span class="line">    token = _token;</span><br><span class="line">    beneficiary = _beneficiary;</span><br><span class="line">    releaseTime = _releaseTime;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @notice 将时间限制内的token转移给受益人.</span><br><span class="line">   */</span><br><span class="line">  function release() public &#123;</span><br><span class="line">    require(block.timestamp &gt;= releaseTime);</span><br><span class="line"></span><br><span class="line">    uint256 amount = token.balanceOf(this);</span><br><span class="line">    require(amount &gt; 0);</span><br><span class="line"></span><br><span class="line">    token.safeTransfer(beneficiary, amount);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>TokenTimelock 合约通过初始化受益人以及释放的时间和锁定的 token，通过release来将锁定期过后释放的 token 转给受益人</p>
+<h1 id="TokenVesting-sol"><a href="#TokenVesting-sol" class="headerlink" title="TokenVesting.sol"></a>TokenVesting.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./ERC20Basic.sol&quot;;</span><br><span class="line">import &quot;./SafeERC20.sol&quot;;</span><br><span class="line">import &quot;../../ownership/Ownable.sol&quot;;</span><br><span class="line">import &quot;../../math/SafeMath.sol&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title TokenVesting 定期释放token</span><br><span class="line"> * @dev token持有人合同可以逐渐释放token余额典型的归属方案，有断崖时间和归属期, 可选择可撤销的所有者。</span><br><span class="line"> */</span><br><span class="line">contract TokenVesting is Ownable &#123;</span><br><span class="line">  using SafeMath for uint256;</span><br><span class="line">  using SafeERC20 for ERC20Basic;</span><br><span class="line"></span><br><span class="line">  event Released(uint256 amount);</span><br><span class="line">  event Revoked();</span><br><span class="line"></span><br><span class="line">  // 释放后的token收益人</span><br><span class="line">  address public beneficiary;</span><br><span class="line"></span><br><span class="line">  uint256 public cliff; //断崖表示「锁仓4年，1年之后一次性解冻25%」中的一年</span><br><span class="line">  uint256 public start;//起始时间</span><br><span class="line">  uint256 public duration;//持续锁仓时间</span><br><span class="line"></span><br><span class="line">  bool public revocable;</span><br><span class="line"></span><br><span class="line">  mapping (address =&gt; uint256) public released;</span><br><span class="line">  mapping (address =&gt; bool) public revoked;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 创建一份归属权合同，将任何ERC20 token的余额归属给_beneficiary,逐渐以线性方式，直到_start + _duration 所有的余额都将归属。</span><br><span class="line">   * @param _beneficiary 授予转让token的受益人的地址</span><br><span class="line">   * @param _cliff 持续时间以秒为单位，代币将开始归属</span><br><span class="line">   * @param _start 归属开始的时间（如Unix时间)</span><br><span class="line">   * @param _duration 持续时间以token的归属期限为单位</span><br><span class="line">   * @param _revocable 归属是否可撤销</span><br><span class="line">   */</span><br><span class="line">  constructor(</span><br><span class="line">    address _beneficiary,</span><br><span class="line">    uint256 _start,</span><br><span class="line">    uint256 _cliff,</span><br><span class="line">    uint256 _duration,</span><br><span class="line">    bool _revocable</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">  &#123;</span><br><span class="line">    require(_beneficiary != address(0));</span><br><span class="line">    require(_cliff &lt;= _duration);</span><br><span class="line"></span><br><span class="line">    beneficiary = _beneficiary;</span><br><span class="line">    revocable = _revocable;</span><br><span class="line">    duration = _duration;</span><br><span class="line">    cliff = _start.add(_cliff);</span><br><span class="line">    start = _start;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @notice 将归属代币转让给受益人.</span><br><span class="line">   * @param token ERC20 token which is being vested</span><br><span class="line">   */</span><br><span class="line">  function release(ERC20Basic token) public &#123;</span><br><span class="line">    uint256 unreleased = releasableAmount(token);</span><br><span class="line"></span><br><span class="line">    require(unreleased &gt; 0);</span><br><span class="line"></span><br><span class="line">    released[token] = released[token].add(unreleased);</span><br><span class="line"></span><br><span class="line">    token.safeTransfer(beneficiary, unreleased);</span><br><span class="line"></span><br><span class="line">    emit Released(unreleased);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @notice允许所有者撤销归属。 token已经归属合约，其余归还给所有者。</span><br><span class="line">   * @param token ERC20 token which is being vested</span><br><span class="line">   */</span><br><span class="line">  function revoke(ERC20Basic token) public onlyOwner &#123;</span><br><span class="line">    require(revocable);</span><br><span class="line">    require(!revoked[token]);</span><br><span class="line"></span><br><span class="line">    uint256 balance = token.balanceOf(this);</span><br><span class="line"></span><br><span class="line">    uint256 unreleased = releasableAmount(token);</span><br><span class="line">    uint256 refund = balance.sub(unreleased);</span><br><span class="line"></span><br><span class="line">    revoked[token] = true;</span><br><span class="line"></span><br><span class="line">    token.safeTransfer(owner, refund);</span><br><span class="line"></span><br><span class="line">    emit Revoked();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 计算已归属但尚未释放的金额。</span><br><span class="line">   * @param token ERC20 token which is being vested</span><br><span class="line">   */</span><br><span class="line">  function releasableAmount(ERC20Basic token) public view returns (uint256) &#123;</span><br><span class="line">    return vestedAmount(token).sub(released[token]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * @dev 计算已归属的金额.</span><br><span class="line">   * @param token ERC20 token which is being vested</span><br><span class="line">   */</span><br><span class="line">  function vestedAmount(ERC20Basic token) public view returns (uint256) &#123;</span><br><span class="line">    uint256 currentBalance = token.balanceOf(this);</span><br><span class="line">    uint256 totalBalance = currentBalance.add(released[token]);</span><br><span class="line"></span><br><span class="line">    if (block.timestamp &lt; cliff) &#123;</span><br><span class="line">      return 0;</span><br><span class="line">    &#125; else if (block.timestamp &gt;= start.add(duration) || revoked[token]) &#123;</span><br><span class="line">      return totalBalance;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      return totalBalance.mul(block.timestamp.sub(start)).div(duration);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>TokenVesting 也是锁仓的一种方式，主要解决的是有断崖时间和持续锁仓时间的锁仓场景</p>
+<h1 id="PausableToken-sol"><a href="#PausableToken-sol" class="headerlink" title="PausableToken.sol"></a>PausableToken.sol</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.23;</span><br><span class="line"></span><br><span class="line">import &quot;./StandardToken.sol&quot;;</span><br><span class="line">import &quot;../../lifecycle/Pausable.sol&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @title Pausable token</span><br><span class="line"> * @dev StandardToken modified with pausable transfers.</span><br><span class="line"> **/</span><br><span class="line">contract PausableToken is StandardToken, Pausable &#123;</span><br><span class="line"></span><br><span class="line">  function transfer(</span><br><span class="line">    address _to,</span><br><span class="line">    uint256 _value</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">    whenNotPaused</span><br><span class="line">    returns (bool)</span><br><span class="line">  &#123;</span><br><span class="line">    return super.transfer(_to, _value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function transferFrom(</span><br><span class="line">    address _from,</span><br><span class="line">    address _to,</span><br><span class="line">    uint256 _value</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">    whenNotPaused</span><br><span class="line">    returns (bool)</span><br><span class="line">  &#123;</span><br><span class="line">    return super.transferFrom(_from, _to, _value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function approve(</span><br><span class="line">    address _spender,</span><br><span class="line">    uint256 _value</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">    whenNotPaused</span><br><span class="line">    returns (bool)</span><br><span class="line">  &#123;</span><br><span class="line">    return super.approve(_spender, _value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function increaseApproval(</span><br><span class="line">    address _spender,</span><br><span class="line">    uint _addedValue</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">    whenNotPaused</span><br><span class="line">    returns (bool success)</span><br><span class="line">  &#123;</span><br><span class="line">    return super.increaseApproval(_spender, _addedValue);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function decreaseApproval(</span><br><span class="line">    address _spender,</span><br><span class="line">    uint _subtractedValue</span><br><span class="line">  )</span><br><span class="line">    public</span><br><span class="line">    whenNotPaused</span><br><span class="line">    returns (bool success)</span><br><span class="line">  &#123;</span><br><span class="line">    return super.decreaseApproval(_spender, _subtractedValue);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>PausableToken 继承了 StandardToken，但是在方法中都添加了whenNotPaused函数修改器，whenNotPaused 继承自 Pausable 合约，Pausable 有个 paused 来标记暂停的状态，从而控制合约的是否暂停。</p>
+<p>OpenZeppelin ERC20 源码分析到这里就结束了。</p>
+<p>转载自Ryan <a href="https://yuanxuxu.com/2018/06/27/openzeppelin-erc20-code-analysis" target="_blank" rel="noopener">是菜鸟 | LNMP 技术栈笔记</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>您的支持将鼓励我持续创作</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/pay/alipay.png" alt="Sailor Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/以太坊/" rel="tag"><i class="fa fa-tag"></i> 以太坊</a>
+          
+            <a href="/tags/区块链/" rel="tag"><i class="fa fa-tag"></i> 区块链</a>
+          
+            <a href="/tags/ERC20/" rel="tag"><i class="fa fa-tag"></i> ERC20</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/13/ipfs/" rel="next" title="IPFS">
+                <i class="fa fa-chevron-left"></i> IPFS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Sailor" />
+          <p class="site-author-name" itemprop="name">Sailor</p>
+           
+              <p class="site-description motion-element" itemprop="description">Stay Hungry,Stay Foolish</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yqsailor" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ERC20Basic-sol"><span class="nav-text">ERC20Basic.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERC20-sol"><span class="nav-text">ERC20.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DetailedERC20-sol"><span class="nav-text">DetailedERC20.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BasicToken-sol"><span class="nav-text">BasicToken.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#StandardToken-sol"><span class="nav-text">StandardToken.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BurnableToken-sol"><span class="nav-text">BurnableToken.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#StandardBurnableToken-sol"><span class="nav-text">StandardBurnableToken.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MintableToken-sol"><span class="nav-text">MintableToken.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CappedToken-sol"><span class="nav-text">CappedToken.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RBACMintableToken-sol"><span class="nav-text">RBACMintableToken.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SafeERC20-sol"><span class="nav-text">SafeERC20.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TokenTimelock-sol"><span class="nav-text">TokenTimelock.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TokenVesting-sol"><span class="nav-text">TokenVesting.sol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PausableToken-sol"><span class="nav-text">PausableToken.sol</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sailor</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

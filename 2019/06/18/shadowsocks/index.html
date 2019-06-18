@@ -91,7 +91,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Shadowsocks," />
+  <meta name="keywords" content="Linux,Shadowsocks," />
 
 
 
@@ -110,14 +110,14 @@
 
 
 <meta name="description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：1sudo apt i">
-<meta name="keywords" content="Shadowsocks">
+<meta name="keywords" content="Linux,Shadowsocks">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux 搭建 Shadowsocks VPN服务">
 <meta property="og:url" content="http://yqsailor.github.io/2019/06/18/shadowsocks/index.html">
 <meta property="og:site_name" content="Sailor&#39;s Blog">
 <meta property="og:description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：1sudo apt i">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-18T09:04:13.195Z">
+<meta property="og:updated_time" content="2019-06-18T09:20:46.139Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux 搭建 Shadowsocks VPN服务">
 <meta name="twitter:description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：1sudo apt i">
@@ -406,6 +406,7 @@
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。</p>
 <h1 id="安装PIP"><a href="#安装PIP" class="headerlink" title="安装PIP"></a>安装PIP</h1><h2 id="Debian-Ubuntu下使用"><a href="#Debian-Ubuntu下使用" class="headerlink" title="Debian/Ubuntu下使用"></a>Debian/Ubuntu下使用</h2><p>本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure></p>
 <h2 id="Centos下使用"><a href="#Centos下使用" class="headerlink" title="Centos下使用"></a>Centos下使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install python-setuptools</span><br><span class="line">easy_install pip</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <h1 id="安装Shadowsocks"><a href="#安装Shadowsocks" class="headerlink" title="安装Shadowsocks"></a>安装Shadowsocks</h1><p>因Shadowsocks作者不再维护pip中的Shadowsocks（定格在了2.8.2），我们使用下面的命令来安装最新版的Shadowsocks：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install https://github.com/shadowsocks/shadowsocks/archive/master.zip</span><br></pre></td></tr></table></figure>
 <p>安装完成后可以使用下面这个命令查看Shadowsocks版本：</p>
@@ -519,6 +520,8 @@
     <footer class="post-footer">
       
         <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
           
             <a href="/tags/Shadowsocks/" rel="tag"><i class="fa fa-tag"></i> Shadowsocks</a>
           
@@ -640,7 +643,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

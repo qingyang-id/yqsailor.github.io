@@ -91,7 +91,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="yq, yangqing, Sailor, Hexo, NexT, Blog, Git, Node.js, JavaScript, Java, 区块链" />
+  <meta name="keywords" content="Nginx," />
 
 
 
@@ -109,16 +109,20 @@
 
 
 
-<meta name="description" content="Stay Hungry,Stay Foolish">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Sailor&#39;s Blog">
-<meta property="og:url" content="http://yqsailor.github.io/tags/Shadowsocks/index.html">
+<meta name="description" content="Nginx 读作 engine x， 是一个免费的、开源的、高性能的 HTTP 和反向代理服务，主要负责负载一些访问量比较大的站点。 Nginx 可以作为一个独立的 Web 服务，也可以用来给 Apache 或是其他的 Web 服务做反向代理。 相比于 Apache，Nginx 可以处理更多的并发连接，而且每个连接的内存占用的非常小。 本教程将会教您如何在 Centos 7 的服务器上安装和管理">
+<meta name="keywords" content="Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 搭建 Nginx">
+<meta property="og:url" content="http://yqsailor.github.io/2019/06/18/nginx/index.html">
 <meta property="og:site_name" content="Sailor&#39;s Blog">
-<meta property="og:description" content="Stay Hungry,Stay Foolish">
+<meta property="og:description" content="Nginx 读作 engine x， 是一个免费的、开源的、高性能的 HTTP 和反向代理服务，主要负责负载一些访问量比较大的站点。 Nginx 可以作为一个独立的 Web 服务，也可以用来给 Apache 或是其他的 Web 服务做反向代理。 相比于 Apache，Nginx 可以处理更多的并发连接，而且每个连接的内存占用的非常小。 本教程将会教您如何在 Centos 7 的服务器上安装和管理">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yqsailor.github.io/2019/06/18/nginx/images/nginx.jpeg">
+<meta property="og:updated_time" content="2019-06-18T07:52:39.054Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Sailor&#39;s Blog">
-<meta name="twitter:description" content="Stay Hungry,Stay Foolish">
+<meta name="twitter:title" content="Linux 搭建 Nginx">
+<meta name="twitter:description" content="Nginx 读作 engine x， 是一个免费的、开源的、高性能的 HTTP 和反向代理服务，主要负责负载一些访问量比较大的站点。 Nginx 可以作为一个独立的 Web 服务，也可以用来给 Apache 或是其他的 Web 服务做反向代理。 相比于 Apache，Nginx 可以处理更多的并发连接，而且每个连接的内存占用的非常小。 本教程将会教您如何在 Centos 7 的服务器上安装和管理">
+<meta name="twitter:image" content="http://yqsailor.github.io/2019/06/18/nginx/images/nginx.jpeg">
 
 
 
@@ -147,13 +151,13 @@
 
 
 
-  <link rel="canonical" href="http://yqsailor.github.io/tags/Shadowsocks/"/>
+  <link rel="canonical" href="http://yqsailor.github.io/2019/06/18/nginx/"/>
 
 
 
 
 
-  <title>标签: Shadowsocks | Sailor's Blog</title>
+  <title>Linux 搭建 Nginx | Sailor's Blog</title>
   
 
 
@@ -178,7 +182,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <a href="https://github.com/yqsailor/blog" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
@@ -298,54 +302,252 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Shadowsocks<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yqsailor.github.io/2019/06/18/nginx/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sailor">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sailor's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/06/18/shadowsocks/" itemprop="url">
-              
-                <span itemprop="name">Linux 搭建 Shadowsocks VPN服务</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Linux 搭建 Nginx</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-06-18T17:00:01+08:00"
-              content="2019-06-18" >
-          06-18
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-18T11:29:29+08:00">
+                2019-06-18
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Nginx 读作 <strong>engine x</strong>， 是一个免费的、开源的、高性能的 HTTP 和反向代理服务，主要负责负载一些访问量比较大的站点。</p>
+<p>Nginx 可以作为一个独立的 Web 服务，也可以用来给 Apache 或是其他的 Web 服务做反向代理。</p>
+<p>相比于 Apache，Nginx 可以处理更多的并发连接，而且每个连接的内存占用的非常小。</p>
+<p>本教程将会教您如何在 Centos 7 的服务器上安装和管理 Nginx。<br><a id="more"></a></p>
+<h2 id="开始前的准备"><a href="#开始前的准备" class="headerlink" title="开始前的准备"></a>开始前的准备</h2><p>在开始阅读此教程之前，请确保你是以拥有<code>sudo</code>权限的用户来登录的服务器，并且服务器中没有 Apache 或是其他服务正在使用 80（HTTP） 和 443（HTTPS） 端口上，防止端口被占用，造成 Nginx 无法正常启动。</p>
+<h2 id="在-CentOS-中安装-Nginx"><a href="#在-CentOS-中安装-Nginx" class="headerlink" title="在 CentOS 中安装 Nginx"></a>在 CentOS 中安装 Nginx</h2><p>请按照下面的步骤，在 CentOS 中安装 Nginx。</p>
+<ol>
+<li>EPEL 仓库中有 Nginx 的安装包。如果你还没有安装过 EPEL，可以通过运行下面的命令来完成安装：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install epel-release</span><br></pre></td></tr></table></figure>
+<p>上面代码的意思是以<code>sudo</code>权限运行安装 epel-release，如果你当前登录的用户不是 root，则会提示你输入密码来运行，输入密码时是看不到输入的内容的，所以不用担心，继续输入就行。然后回车继续运行，后面的命令中如果包含<code>sudo</code>则都表明是刚提到的意思，不再重复解释。</p>
+<p><em>2.</em> 输入以下命令来安装 Nginx：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install nginx</span><br></pre></td></tr></table></figure>
+<p>如果这是您第一次从 EPEL 仓库中安装软件，yum 可能会提示您导入 EPEL GPG key：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7</span><br><span class="line">Importing GPG key 0x352C64E5:</span><br><span class="line">Userid     : <span class="string">"Fedora EPEL (7) &lt;epel@fedoraproject.org&gt;"</span></span><br><span class="line">Fingerprint: 91e9 7d7c 4a5e 96f1 7f3e 888f 6a2f aea2 352c 64e5</span><br><span class="line">Package    : epel-release-7-9.noarch (@extras)</span><br><span class="line">From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7</span><br><span class="line">Is this ok [y/N]:</span><br></pre></td></tr></table></figure></p>
+<p>类似于上面的内容，遇到这种情况，输入<strong><em>y</em></strong>，然后 <strong><em>Enter（回车）</em></strong> 即可继续安装。</p>
+<p><em>3.</em> 等到安装完成以后，可以通过以下命令来设置开机启动和运行 Nginx 服务：</p>
+<p>设置 Nginx 开机启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> nginx</span><br></pre></td></tr></table></figure>
+<p>运行以上命令以后，会输出类似以下的内容，表示创建了一个软连接来关联 Nginx，不用担心，并不是报错了，下一步就可以启动 Nginx 了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /usr/lib/systemd/system/nginx.service.</span><br></pre></td></tr></table></figure>
+<p>启动 Nginx：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start nginx</span><br></pre></td></tr></table></figure>
+<p>通过运行以下命令，来检查 Nginx 的运行状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status nginx</span><br></pre></td></tr></table></figure>
+<p>然后会输出类型下面的内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">● nginx.service - The nginx HTTP and reverse proxy server</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since 一 2019-06-17 20:50:57 CST; 7s ago</span><br><span class="line">  Process: 4857 ExecStart=/usr/sbin/nginx (code=exited, status=0/SUCCESS)</span><br><span class="line">  Process: 4853 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)</span><br><span class="line">  Process: 4852 ExecStartPre=/usr/bin/rm -f /run/nginx.pid (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 4859 (nginx)</span><br><span class="line">   CGroup: /system.slice/nginx.service</span><br><span class="line">           ├─4859 nginx: master process /usr/sbin/nginx</span><br><span class="line">           └─4860 nginx: worker process</span><br></pre></td></tr></table></figure>
+<p><em>4.</em> 如果你的服务器开启了防火墙，则需要同时打开 80（HTTP）和 443（HTTPS）端口</p>
+<p>通过下面的命令来打开这两个端口：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --permanent --zone=public --add-service=http</span><br><span class="line">sudo firewall-cmd --permanent --zone=public --add-service=https</span><br><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<p>国内的服务器厂商，安全组也可能会默认屏蔽这两个端口，比如 阿里云 和 腾讯云，如果在 第 5 步 时发现无法访问，可以自行百度一下如何放开这两个端口。</p>
+<p>5、 验证 Nginx 是否成功启动，可以在浏览器中打开 <em><a href="http://YOUR_IP" target="_blank" rel="noopener">http://YOUR_IP</a></em>，您将看到默认的 Nginx 欢迎页面，类似于下图所示：</p>
+<img src="/2019/06/18/nginx/images/nginx.jpeg">
+<p>注：Nginx 的默认欢迎页有好几种样式，和你安装的版本有关，所以大家只用关注这个页面的大标题就行了 <em>Welcome to nginx！</em></p>
+<h2 id="通过-systemctl-管理-Nginx"><a href="#通过-systemctl-管理-Nginx" class="headerlink" title="通过 systemctl 管理 Nginx"></a>通过 systemctl 管理 Nginx</h2><p>你可以像管理其他服务那样管理 Nginx。</p>
+<p>启动 Nginx</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start nginx</span><br></pre></td></tr></table></figure>
+<p>停止 Nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl stop nginx</span><br></pre></td></tr></table></figure>
+<p>重启 Nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart nginx</span><br></pre></td></tr></table></figure>
+<p>修改 Nginx 配置后，重新加载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl reload nginx</span><br></pre></td></tr></table></figure>
+<p>设置开机启动 Nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable nginx</span><br></pre></td></tr></table></figure>
+<p>关闭开机启动 Nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl disable nginx</span><br></pre></td></tr></table></figure>
+<h2 id="Nginx-的配置文件和最佳实践"><a href="#Nginx-的配置文件和最佳实践" class="headerlink" title="Nginx 的配置文件和最佳实践"></a>Nginx 的配置文件和最佳实践</h2><p><em>1、</em>通过以上方式安装的 Nginx，所有相关的配置文件都在 /etc/nginx/ 目录中。</p>
+<p><em>2、</em>Nginx 的主配置文件是 /etc/nginx/nginx.conf。</p>
+<p><em>3、</em>为了使 Nginx 配置更易于维护，建议为每个服务（域名）创建一个单独的配置文件。</p>
+<p><em>4、</em>每一个独立的 Nginx 服务配置文件都必须以 .conf 结尾，并存储在 /etc/nginx/conf.d 目录中。您可以根据需求，创建任意多个独立的配置文件。</p>
+<p><em>5、</em>独立的配置文件，建议遵循以下命名约定，比如你的域名是 kaifazhinan.com，那么你的配置文件的应该是这样的 /etc/nginx/conf.d/kaifazhinan.com.conf，如果你在一个服务器中部署多个服务，当然你也可以在文件名中加上 Nginx 转发的端口号，比如 kaifazhinan.com.3000.conf，这样做看起来会更加友好。</p>
+<p><em>6、</em>如果你的配置中有很多重复的代码，那么建议你创建一个 /etc/nginx/snippets 文件夹，在这里面存放所有会被复用的代码块，然后在各个需要用到的 Nginx 的配置文件中引用进去，这样可以更方便管理和修改。</p>
+<p><em>7、</em>Nginx 日志文件（access.log 和 error.log ）位于 /var/log/nginx/ 目录中。建议为每个独立的服务配置不同的访问权限和错误日志文件，这样查找错误时，会更加方便快捷。</p>
+<p><em>8、</em>你可以将要部署的代码文件，存储在任何你想的位置，但是一般推荐存放在下列位置中的其中一个：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/home/&lt;user_name&gt;/&lt;site_name&gt;</span><br><span class="line">/var/www/&lt;site_name&gt;</span><br><span class="line">/var/www/html/&lt;site_name&gt;</span><br><span class="line">/opt/&lt;site_name&gt;</span><br><span class="line">/usr/share/nginx/html</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>首先恭喜你，你已经成功的在 CentOS 7 上安装了 Nginx 服务，你现在可以在你的服务器中通过 Nginx 部署你的服务代码啦。</p>
+<p>期待下次与你相见 : )</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>您的支持将鼓励我持续创作</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/pay/alipay.png" alt="Sailor Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Nginx/" rel="tag"><i class="fa fa-tag"></i> Nginx</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/15/erc20/" rel="next" title="OpenZeppelin ERC20源码分析">
+                <i class="fa fa-chevron-left"></i> OpenZeppelin ERC20源码分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/18/shadowsocks/" rel="prev" title="Linux 搭建 Shadowsocks VPN服务">
+                Linux 搭建 Shadowsocks VPN服务 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -353,6 +555,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -373,8 +579,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpeg"
@@ -455,6 +670,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开始前的准备"><span class="nav-text">开始前的准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在-CentOS-中安装-Nginx"><span class="nav-text">在 CentOS 中安装 Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过-systemctl-管理-Nginx"><span class="nav-text">通过 systemctl 管理 Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-的配置文件和最佳实践"><span class="nav-text">Nginx 的配置文件和最佳实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -562,10 +793,10 @@
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 

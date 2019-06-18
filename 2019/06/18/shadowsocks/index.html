@@ -109,18 +109,18 @@
 
 
 
-<meta name="description" content="IPFS的全称是InterPlanetary File System星际文件系统，是一个点对点的网络超媒体协议。它的目标是成为更快、更安全、更开放的下一代互联网。 IPFS介绍IPFS尝试解决HTTP目前存在的四个问题：. 服务低效，成本高。这也是大部分P2P服务比中心化服务器优秀的地方。 . 网络服务受限于供应商，文件具有无法永久保存的风险，更无法历史回溯。 . 中心化的网络权力过于集中，网络控">
+<meta name="description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：1sudo apt i">
 <meta name="keywords" content="Shadowsocks">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux 搭建 Shadowsocks VPN服务">
 <meta property="og:url" content="http://yqsailor.github.io/2019/06/18/shadowsocks/index.html">
 <meta property="og:site_name" content="Sailor&#39;s Blog">
-<meta property="og:description" content="IPFS的全称是InterPlanetary File System星际文件系统，是一个点对点的网络超媒体协议。它的目标是成为更快、更安全、更开放的下一代互联网。 IPFS介绍IPFS尝试解决HTTP目前存在的四个问题：. 服务低效，成本高。这也是大部分P2P服务比中心化服务器优秀的地方。 . 网络服务受限于供应商，文件具有无法永久保存的风险，更无法历史回溯。 . 中心化的网络权力过于集中，网络控">
+<meta property="og:description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：1sudo apt i">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-18T03:12:10.494Z">
+<meta property="og:updated_time" content="2019-06-18T09:04:13.195Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux 搭建 Shadowsocks VPN服务">
-<meta name="twitter:description" content="IPFS的全称是InterPlanetary File System星际文件系统，是一个点对点的网络超媒体协议。它的目标是成为更快、更安全、更开放的下一代互联网。 IPFS介绍IPFS尝试解决HTTP目前存在的四个问题：. 服务低效，成本高。这也是大部分P2P服务比中心化服务器优秀的地方。 . 网络服务受限于供应商，文件具有无法永久保存的风险，更无法历史回溯。 . 中心化的网络权力过于集中，网络控">
+<meta name="twitter:description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：1sudo apt i">
 
 
 
@@ -403,42 +403,82 @@
       
 
       
-        <p><a href="https://ipfs.io/" target="_blank" rel="noopener">IPFS</a>的全称是InterPlanetary File System星际文件系统，是一个点对点的网络超媒体协议。它的目标是成为更快、更安全、更开放的下一代互联网。<br></p>
-<h2 id="IPFS介绍"><a href="#IPFS介绍" class="headerlink" title="IPFS介绍"></a>IPFS介绍</h2><h3 id="IPFS尝试解决HTTP目前存在的四个问题："><a href="#IPFS尝试解决HTTP目前存在的四个问题：" class="headerlink" title="IPFS尝试解决HTTP目前存在的四个问题："></a>IPFS尝试解决HTTP目前存在的四个问题：</h3><p>. 服务低效，成本高。这也是大部分P2P服务比中心化服务器优秀的地方。</p>
-<p>. 网络服务受限于供应商，文件具有无法永久保存的风险，更无法历史回溯。</p>
-<p>. 中心化的网络权力过于集中，网络控制和监管某些程度上限制了科技创新。</p>
-<p>. 互联网服务大多依赖于骨干网络，一旦宕机大部分服务将无法使用。</p>
-<h3 id="IPFS的野心是取代现在的HTTP，去创建一个全新的去中心化网络。"><a href="#IPFS的野心是取代现在的HTTP，去创建一个全新的去中心化网络。" class="headerlink" title="IPFS的野心是取代现在的HTTP，去创建一个全新的去中心化网络。"></a>IPFS的野心是取代现在的HTTP，去创建一个全新的去中心化网络。</h3><a id="more"></a>
-<p>在IPFS网络上，每个IPFS上的文件都具备一个唯一的哈希码。IPFS同时具备了文件去重和历史版本的功能，每个网络节点会存储自己感兴趣的内容，并且索引其它内容的位置，用户可以通过哈希码来寻找到每个文件的具体位置。此外IPFS本身还自带一个IPNS的域名，可以把你的内容和你的个人域名进行绑定。</p>
-<h2 id="IPFS的下载与安装"><a href="#IPFS的下载与安装" class="headerlink" title="IPFS的下载与安装"></a>IPFS的下载与安装</h2><p>可参考官网：<a href="https://ipfs.io/docs/install" target="_blank" rel="noopener">https://ipfs.io/docs/install</a> ，备注：目前需要科学上网才能访问</p>
-<p>本文以mac环境下安装为例进行说明（mac下也可以用homebrew执行<code>brew install ipfs</code>进行安装），在terminal内输入以下命令进行下载与安装。本文时间(2018.9.13)的最新版本为v0.4.17，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar go-ipfs_v0.4.17_darwin-amd64.tar.gz</span><br><span class="line">cd go-ipfs</span><br><span class="line">./install.sh</span><br></pre></td></tr></table></figure></p>
-<p>安装后使用help命令，可以测试是否成功。</p>
-<p><code>ipfs help</code></p>
-<h3 id="IPFS的启动"><a href="#IPFS的启动" class="headerlink" title="IPFS的启动"></a>IPFS的启动</h3><p>使用参考：<a href="https://ipfs.io/docs/getting-started" target="_blank" rel="noopener">https://ipfs.io/docs/getting-started</a></p>
-<p>首先进行初始化，创建一个全局的本地仓库与配置文件。</p>
-<p><code>ipfs init</code></p>
-<p>然后需要开启IPFS的进程从而与网络保持连接状态。这里加上&amp;是为了让进程在后台运行，可以在开启后同时按CTRL键C键回到之前界面。</p>
-<p><code>ipfs daemon &amp;</code></p>
-<p>可以通过下面的命令查看我们在IPFS网络上已经连接的节点</p>
-<p><code>ipfs swarm peers</code></p>
-<h2 id="IPFS的使用"><a href="#IPFS的使用" class="headerlink" title="IPFS的使用"></a>IPFS的使用</h2><p>这里讲解一下hexo搭建的个人博客上传到IPFS网络上。hexo搭建个人博客请移步至hexo+next搭建个人博客，并发布到git pages</p>
-<p>1、使用命令<code>ipfs id</code>查看你的电脑的ipfs id</p>
-<p>2、修改全局配置_config.yml中的root为<code>/ipns/${ipfsId}</code>,其中的ipfsId为你电脑对应的ipfs id</p>
-<p>3、在你的hexo搭建的博客根目录下执行如下命令打包生成对应的静态文件。</p>
-<p><code>hexo generate（hexo g也可以）</code></p>
-<p>4、通过ipfs add命令，直接把项目直接添加到IPFS网络。</p>
-<p><code>ipfs add -r public/</code></p>
-
-<p>5、通过<code>ipfs name pulished</code>命令，把项目绑定到IPNS。</p>
-<p><code>ipfs name publish QmcmaC834fyeqXuxZmkKd2ukSLsZY5tprGffzCXrpKzAZ8</code></p>
-<p> 完成这一步后，你应该会在Terminal里看到如下运行结果，你的ipfs id标识了你的文件在网路上的位置。</p>
-<p><code>Published to 你的ipfs id: /ipfs/QmcmaC834fyeqXuxZmkKd2ukSLsZY5tprGffzCXrpKzAZ8</code></p>
-<p>6、现在你的文件已经在IPFS上了，网络为了避免垃圾资源过度的情况会在一段时间之后清空数据。为了保证我们的文件能够一直保持在IPFS网络上，我们需要执行pin命令，这样只要你的IPFS进程还开启着，数据就不会被垃圾回收。</p>
-<p><code>ipfs pin add -r QmcmaC834fyeqXuxZmkKd2ukSLsZY5tprGffzCXrpKzAZ8</code></p>
-<p>现在你的个人网站已经搭建在了一个完全去中心化的网络上了。你可以通过网址 <a href="https://gateway.ipfs.io/ipns/你的ipfsId" target="_blank" rel="noopener">https://gateway.ipfs.io/ipns/你的ipfsId</a> 访问你的个人主页，也可以通过<a href="http://127.0.0.1:8080/ipns/你的ipfsId" target="_blank" rel="noopener">http://127.0.0.1:8080/ipns/你的ipfsId</a> 。另外要注意的是，IPFS的网关目前需要科学上网才能连接，当然，在没有优化之前，访问会很慢，但可以打开。</p>
-<p>7、 绑定独立域名<br>将博客发布到了IPFS运行的区块链节点上，但复杂的site_hash并不友好，我们可以使用IPNS技术，通过绑定独立域名来实现与现有的网站访问并无任何不一样的体现。我们假设你已经有一个可以正常使用的域名，如aa.com，没有域名的可以到任意域名服务商初购买。</p>
-<p>有了域名之后，为域名aa.com添加TXT记录为<strong>dnslink=/ipns/你的ipfsId</strong>,同时将域名A记录指向任意ipfs节点的ip，如gateway.ipfs.io。</p>
-<p>现在访问aa.com，你是不是发现已经可以正常访问你刚才生成的博客了。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。</p>
+<h1 id="安装PIP"><a href="#安装PIP" class="headerlink" title="安装PIP"></a>安装PIP</h1><h2 id="Debian-Ubuntu下使用"><a href="#Debian-Ubuntu下使用" class="headerlink" title="Debian/Ubuntu下使用"></a>Debian/Ubuntu下使用</h2><p>本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure></p>
+<h2 id="Centos下使用"><a href="#Centos下使用" class="headerlink" title="Centos下使用"></a>Centos下使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install python-setuptools</span><br><span class="line">easy_install pip</span><br></pre></td></tr></table></figure>
+<h1 id="安装Shadowsocks"><a href="#安装Shadowsocks" class="headerlink" title="安装Shadowsocks"></a>安装Shadowsocks</h1><p>因Shadowsocks作者不再维护pip中的Shadowsocks（定格在了2.8.2），我们使用下面的命令来安装最新版的Shadowsocks：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install https://github.com/shadowsocks/shadowsocks/archive/master.zip</span><br></pre></td></tr></table></figure>
+<p>安装完成后可以使用下面这个命令查看Shadowsocks版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssserver --version</span><br></pre></td></tr></table></figure>
+<p>目前会显示“Shadowsocks 3.0.0”。</p>
+<h1 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h1><p>创建Shadowsocks配置文件所在文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /etc/shadowsocks</span><br></pre></td></tr></table></figure>
+<p>然后创建配置文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
+<p>复制粘贴如下内容（注意修改密码“password”）：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"server"</span>:<span class="string">"0.0.0.0"</span>,</span><br><span class="line">    <span class="attr">"server_port"</span>:<span class="number">8388</span>,</span><br><span class="line">    <span class="attr">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="attr">"local_port"</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="attr">"password"</span>:<span class="string">"123456"</span>,</span><br><span class="line">    <span class="attr">"timeout"</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="attr">"method"</span>:<span class="string">"chacha20"</span>,</span><br><span class="line">    <span class="attr">"fast_open"</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>“server” ；服务器IP，不用更改<br>“server_port” ；服务器端口，即用于给用户连接的端口，范围0-65535，任选一个端口，只要不与常用端口冲突就行，不过不推荐使用80\443等网站用端口，也不推荐大多数ss的默认端口8388<br>“local_address” ；本机地址，不用更改<br>“local_port” ；本地端端口，不用更改<br>“password” ；账户的密码<br>“timeout” ；超时时间（秒），不用改<br>“method” ；加密方式，推荐用 chacha20 ，不用默认的 rc4-md5 或者 aes-256-cfb，因为默认的太多人用，容易被墙<br>“fast_open” ；true 或 false。如果服务器 Linux 内核在 3.7+，可以开启 fast_open 以降低延迟。开启方法： echo 3 &gt; &gt; /proc/sys/net/ipv4/tcp_fastopen 开启之后，将 fast_open 的配置设置为 true 即可<br>多个账号：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;  </span><br><span class="line">    <span class="attr">"server"</span>:<span class="string">"0.0.0.0"</span>,  </span><br><span class="line">    <span class="attr">"port_password"</span>:&#123;  </span><br><span class="line">     "8381":"xxx",  // xxx为端口对应的密码 </span><br><span class="line">     "8382":"xxx",  </span><br><span class="line">     "8383":"xxx",  </span><br><span class="line">     "8384":"xxx"  </span><br><span class="line">     &#125;,  </span><br><span class="line">    "local_address": "127.0.0.1",</span><br><span class="line">    "local_port":1080,</span><br><span class="line">    "timeout":300,  </span><br><span class="line">    "method":"chacha20",  </span><br><span class="line">    "fast_open": false  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="测试Shadowsocks配置"><a href="#测试Shadowsocks配置" class="headerlink" title="测试Shadowsocks配置"></a>测试Shadowsocks配置</h1><p>启动shadowsocks<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssserver -c /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
+<p>在Shadowsocks客户端添加服务器，如果你使用的是我提供的那个配置文件的话，地址为服务器外网IP，端口号为8388，加密方法为chacha20，密码为你设置的密码。然后设置客户端使用全局模式，浏览器登录Google试试应该能直接打开了。</p>
+<p>这时浏览器登录<a href="http://ip138.com/就会显示Shadowsocks服务器的IP啦！" target="_blank" rel="noopener">http://ip138.com/就会显示Shadowsocks服务器的IP啦！</a></p>
+<p>测试完毕，按Ctrl + C关闭Shadowsocks。</p>
+<p>如果无法使用，可能是端口未开放，防火墙需开放8388端口</p>
+<h1 id="配置Systemd管理Shadowsocks"><a href="#配置Systemd管理Shadowsocks" class="headerlink" title="配置Systemd管理Shadowsocks"></a>配置Systemd管理Shadowsocks</h1><p>新建Shadowsocks管理文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/systemd/system/shadowsocks-server.service</span><br></pre></td></tr></table></figure>
+<p>复制粘贴：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks Server</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/<span class="built_in">local</span>/bin/ssserver -c /etc/shadowsocks/config.json</span><br><span class="line">Restart=on-abort</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></p>
+<p>Ctrl + O保存文件，Ctrl + X退出。</p>
+<p>启动Shadowsocks：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start shadowsocks-server</span><br></pre></td></tr></table></figure>
+<p>设置开机启动Shadowsocks：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> shadowsocks-server</span><br></pre></td></tr></table></figure>
+<p>查看Shadowsocks状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status shadowsocks</span><br></pre></td></tr></table></figure>
+<p>至此，Shadowsock服务器端的基本配置已经全部完成了！</p>
+<h1 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h1><p>这部分属于进阶操作，在你使用Shadowsocks时感觉到延迟较大，或吞吐量较低时，可以考虑对服务器端进行优化。</p>
+<h2 id="开启BBR"><a href="#开启BBR" class="headerlink" title="开启BBR"></a>开启BBR</h2><p>BBR系Google最新开发的TCP拥塞控制算法，目前有着较好的带宽提升效果，甚至不比老牌的锐速差。</p>
+<h2 id="升级Linux内核"><a href="#升级Linux内核" class="headerlink" title="升级Linux内核"></a>升级Linux内核</h2><p>BBR在Linux kernel 4.9引入。首先检查服务器kernel版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+<p>如果其显示版本在4.9.0之下，则需要升级Linux内核，否则请忽略下文。</p>
+<p>更新包管理器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br></pre></td></tr></table></figure>
+<p>查看可用的Linux内核版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-cache showpkg linux-image</span><br></pre></td></tr></table></figure>
+<p>找到一个你想要升级的Linux内核版本，如“linux-image-4.10.0-22-generic”：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install linux-image-4.10.0-22-generic</span><br></pre></td></tr></table></figure>
+<p>等待安装完成后重启服务器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo reboot</span><br></pre></td></tr></table></figure>
+<p>删除老的Linux内核：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo purge-old-kernels</span><br></pre></td></tr></table></figure>
+<p>开启BBR<br>运行lsmod | grep bbr，如果结果中没有tcp_bbr，则先运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">modprobe tcp_bbr</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"tcp_bbr"</span> &gt;&gt; /etc/modules-load.d/modules.conf</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"net.core.default_qdisc=fq"</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"net.ipv4.tcp_congestion_control=bbr"</span> &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+<p>保存生效。运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sysctl net.ipv4.tcp_available_congestion_control</span><br><span class="line">sysctl net.ipv4.tcp_congestion_control</span><br></pre></td></tr></table></figure>
+<p>若均有bbr，则开启BBR成功。</p>
+<p>优化吞吐量<br>新建配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/sysctl.d/local.conf</span><br></pre></td></tr></table></figure>
+<p>复制粘贴：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># max open files</span></span><br><span class="line">fs.file-max = 51200</span><br><span class="line"><span class="comment"># max read buffer</span></span><br><span class="line">net.core.rmem_max = 67108864</span><br><span class="line"><span class="comment"># max write buffer</span></span><br><span class="line">net.core.wmem_max = 67108864</span><br><span class="line"><span class="comment"># default read buffer</span></span><br><span class="line">net.core.rmem_default = 65536</span><br><span class="line"><span class="comment"># default write buffer</span></span><br><span class="line">net.core.wmem_default = 65536</span><br><span class="line"><span class="comment"># max processor input queue</span></span><br><span class="line">net.core.netdev_max_backlog = 4096</span><br><span class="line"><span class="comment"># max backlog</span></span><br><span class="line">net.core.somaxconn = 4096</span><br><span class="line"></span><br><span class="line"><span class="comment"># resist SYN flood attacks</span></span><br><span class="line">net.ipv4.tcp_syncookies = 1</span><br><span class="line"><span class="comment"># reuse timewait sockets when safe</span></span><br><span class="line">net.ipv4.tcp_tw_reuse = 1</span><br><span class="line"><span class="comment"># turn off fast timewait sockets recycling</span></span><br><span class="line">net.ipv4.tcp_tw_recycle = 0</span><br><span class="line"><span class="comment"># short FIN timeout</span></span><br><span class="line">net.ipv4.tcp_fin_timeout = 30</span><br><span class="line"><span class="comment"># short keepalive time</span></span><br><span class="line">net.ipv4.tcp_keepalive_time = 1200</span><br><span class="line"><span class="comment"># outbound port range</span></span><br><span class="line">net.ipv4.ip_local_port_range = 10000 65000</span><br><span class="line"><span class="comment"># max SYN backlog</span></span><br><span class="line">net.ipv4.tcp_max_syn_backlog = 4096</span><br><span class="line"><span class="comment"># max timewait sockets held by system simultaneously</span></span><br><span class="line">net.ipv4.tcp_max_tw_buckets = 5000</span><br><span class="line"><span class="comment"># turn on TCP Fast Open on both client and server side</span></span><br><span class="line">net.ipv4.tcp_fastopen = 3</span><br><span class="line"><span class="comment"># TCP receive buffer</span></span><br><span class="line">net.ipv4.tcp_rmem = 4096 87380 67108864</span><br><span class="line"><span class="comment"># TCP write buffer</span></span><br><span class="line">net.ipv4.tcp_wmem = 4096 65536 67108864</span><br><span class="line"><span class="comment"># turn on path MTU discovery</span></span><br><span class="line">net.ipv4.tcp_mtu_probing = 1</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_congestion_control = bbr</span><br></pre></td></tr></table></figure></p>
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl --system</span><br></pre></td></tr></table></figure>
+<p>编辑之前的shadowsocks-server.service文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/systemd/system/shadowsocks-server.service</span><br></pre></td></tr></table></figure>
+<p>在ExecStart前插入一行，内容为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExecStartPre=/bin/sh -c <span class="string">'ulimit -n 51200'</span></span><br></pre></td></tr></table></figure>
+<p>即修改后的shadowsocks-server.service内容为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks Server</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStartPre=/bin/sh -c <span class="string">'ulimit -n 51200'</span></span><br><span class="line">ExecStart=/usr/<span class="built_in">local</span>/bin/ssserver -c /etc/shadowsocks/config.json</span><br><span class="line">Restart=on-abort</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></p>
+<p>Ctrl + O保存文件，Ctrl + X退出。</p>
+<p>重载shadowsocks-server.service：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+<p>重启Shadowsocks：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart shadowsocks-server</span><br></pre></td></tr></table></figure>
+<p>开启TCP Fast Open<br>TCP Fast Open可以降低Shadowsocks服务器和客户端的延迟。实际上在上一步已经开启了TCP Fast Open，现在只需要在Shadowsocks配置中启用TCP Fast Open。</p>
+<p>编辑config.json：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure>
+<p>将fast_open的值由false修改为true。Ctrl + O保存文件，Ctrl + X退出。</p>
+<p>重启Shadowsocks：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart shadowsocks-server</span><br></pre></td></tr></table></figure>
+<p>注意：TCP Fast Open同时需要客户端的支持，即客户端Linux内核版本为3.7.1及以上；你可以在Shadowsocks客户端中启用TCP Fast Open。</p>
+<p>至此，Shadowsock服务器端的优化已经全部完成了！</p>
 
       
     </div>
@@ -493,8 +533,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/15/erc20/" rel="next" title="OpenZeppelin ERC20源码分析">
-                <i class="fa fa-chevron-left"></i> OpenZeppelin ERC20源码分析
+              <a href="/2019/06/18/nginx/" rel="next" title="Linux 搭建 Nginx">
+                <i class="fa fa-chevron-left"></i> Linux 搭建 Nginx
               </a>
             
           </div>
@@ -578,7 +618,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -600,7 +640,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -654,7 +694,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IPFS介绍"><span class="nav-text">IPFS介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IPFS尝试解决HTTP目前存在的四个问题："><span class="nav-text">IPFS尝试解决HTTP目前存在的四个问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IPFS的野心是取代现在的HTTP，去创建一个全新的去中心化网络。"><span class="nav-text">IPFS的野心是取代现在的HTTP，去创建一个全新的去中心化网络。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IPFS的下载与安装"><span class="nav-text">IPFS的下载与安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IPFS的启动"><span class="nav-text">IPFS的启动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IPFS的使用"><span class="nav-text">IPFS的使用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装PIP"><span class="nav-text">安装PIP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Debian-Ubuntu下使用"><span class="nav-text">Debian/Ubuntu下使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Centos下使用"><span class="nav-text">Centos下使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装Shadowsocks"><span class="nav-text">安装Shadowsocks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建配置文件"><span class="nav-text">创建配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试Shadowsocks配置"><span class="nav-text">测试Shadowsocks配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置Systemd管理Shadowsocks"><span class="nav-text">配置Systemd管理Shadowsocks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优化"><span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开启BBR"><span class="nav-text">开启BBR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#升级Linux内核"><span class="nav-text">升级Linux内核</span></a></li></ol></li></ol></div>
             
 
           </div>

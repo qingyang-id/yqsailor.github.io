@@ -91,7 +91,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Linux,Shadowsocks," />
+  <meta name="keywords" content="Shadowsocks,Linux," />
 
 
 
@@ -109,18 +109,18 @@
 
 
 
-<meta name="description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：1sudo apt i">
-<meta name="keywords" content="Linux,Shadowsocks">
+<meta name="description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3： Ubuntu16 安">
+<meta name="keywords" content="Shadowsocks,Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux 搭建 Shadowsocks VPN服务">
 <meta property="og:url" content="http://yqsailor.github.io/2019/06/18/shadowsocks/index.html">
 <meta property="og:site_name" content="Sailor&#39;s Blog">
-<meta property="og:description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：1sudo apt i">
+<meta property="og:description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3： Ubuntu16 安">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-19T09:13:41.555Z">
+<meta property="og:updated_time" content="2019-06-19T12:55:46.302Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux 搭建 Shadowsocks VPN服务">
-<meta name="twitter:description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：1sudo apt i">
+<meta name="twitter:description" content="前言公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。 安装PIPDebian/Ubuntu下使用本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3： Ubuntu16 安">
 
 
 
@@ -404,11 +404,13 @@
 
       
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公司的VPN被封了，因此就注册了AWS，搭建自己的shadowsocks代理服务器，实现科学上网。AWS为新用户提供了一年每月750小时和30G流量的1核1G服务器，当然也可以选择google云，也为新用户提供了一年的免费试用。</p>
-<h1 id="安装PIP"><a href="#安装PIP" class="headerlink" title="安装PIP"></a>安装PIP</h1><h2 id="Debian-Ubuntu下使用"><a href="#Debian-Ubuntu下使用" class="headerlink" title="Debian/Ubuntu下使用"></a>Debian/Ubuntu下使用</h2><p>本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure></p>
-<h2 id="Centos下使用"><a href="#Centos下使用" class="headerlink" title="Centos下使用"></a>Centos下使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install python-setuptools</span><br><span class="line">easy_install pip</span><br></pre></td></tr></table></figure>
+<h1 id="安装PIP"><a href="#安装PIP" class="headerlink" title="安装PIP"></a>安装PIP</h1><h2 id="Debian-Ubuntu下使用"><a href="#Debian-Ubuntu下使用" class="headerlink" title="Debian/Ubuntu下使用"></a>Debian/Ubuntu下使用</h2><p>本教程使用Python 3为载体，因Python 3对应的包管理器pip3并未预装，首先安装pip3：</p>
+<p>Ubuntu16 安装pip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure></p>
+<p>Ubuntu18 安装pip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line"></span><br><span class="line">sudo apt-get install python3-pip</span><br></pre></td></tr></table></figure></p>
+<h2 id="Centos下使用"><a href="#Centos下使用" class="headerlink" title="Centos下使用"></a>Centos下使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y epel-release</span><br><span class="line">sudo yum install python3-pip</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <h1 id="安装Shadowsocks"><a href="#安装Shadowsocks" class="headerlink" title="安装Shadowsocks"></a>安装Shadowsocks</h1><p>因Shadowsocks作者不再维护pip中的Shadowsocks（定格在了2.8.2），我们使用下面的命令来安装最新版的Shadowsocks：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install https://github.com/shadowsocks/shadowsocks/archive/master.zip</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip3 install --upgrade git+https://github.com/shadowsocks/shadowsocks.git@master</span><br></pre></td></tr></table></figure>
 <p>安装完成后可以使用下面这个命令查看Shadowsocks版本：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssserver --version</span><br></pre></td></tr></table></figure>
 <p>目前会显示“Shadowsocks 3.0.0”。</p>
@@ -419,19 +421,19 @@
 <p>“server” ；服务器IP，不用更改<br>“server_port” ；服务器端口，即用于给用户连接的端口，范围0-65535，任选一个端口，只要不与常用端口冲突就行，不过不推荐使用80\443等网站用端口，也不推荐大多数ss的默认端口8388<br>“local_address” ；本机地址，不用更改<br>“local_port” ；本地端端口，不用更改<br>“password” ；账户的密码<br>“timeout” ；超时时间（秒），不用改<br>“method” ；加密方式，推荐用 chacha20 ，不用默认的 rc4-md5 或者 aes-256-cfb，因为默认的太多人用，容易被墙<br>“fast_open” ；true 或 false。如果服务器 Linux 内核在 3.7+，可以开启 fast_open 以降低延迟。开启方法： echo 3 &gt; &gt; /proc/sys/net/ipv4/tcp_fastopen 开启之后，将 fast_open 的配置设置为 true 即可<br>多个账号：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;  </span><br><span class="line">    <span class="attr">"server"</span>:<span class="string">"0.0.0.0"</span>,  </span><br><span class="line">    <span class="attr">"port_password"</span>:&#123;  </span><br><span class="line">     "8381":"xxx",  // xxx为端口对应的密码 </span><br><span class="line">     "8382":"xxx",  </span><br><span class="line">     "8383":"xxx",  </span><br><span class="line">     "8384":"xxx"  </span><br><span class="line">     &#125;,  </span><br><span class="line">    "local_address": "127.0.0.1",</span><br><span class="line">    "local_port":1080,</span><br><span class="line">    "timeout":300,  </span><br><span class="line">    "method":"chacha20",  </span><br><span class="line">    "fast_open": false  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h1 id="测试Shadowsocks配置"><a href="#测试Shadowsocks配置" class="headerlink" title="测试Shadowsocks配置"></a>测试Shadowsocks配置</h1><p>启动shadowsocks<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssserver -c /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
 <p>在Shadowsocks客户端添加服务器，如果你使用的是我提供的那个配置文件的话，地址为服务器外网IP，端口号为8388，加密方法为chacha20，密码为你设置的密码。然后设置客户端使用全局模式，浏览器登录Google试试应该能直接打开了。</p>
-<p>这时浏览器登录<a href="http://ip138.com/就会显示Shadowsocks服务器的IP啦！" target="_blank" rel="noopener">http://ip138.com/就会显示Shadowsocks服务器的IP啦！</a></p>
+<p>这时浏览器访问<a href="http://ip138.com" target="_blank" rel="noopener">ip138</a>就会显示Shadowsocks服务器的IP啦！</p>
 <p>测试完毕，按Ctrl + C关闭Shadowsocks。</p>
 <p>如果无法使用，可能是端口未开放，防火墙需开放8388端口</p>
 <h1 id="配置Systemd管理Shadowsocks"><a href="#配置Systemd管理Shadowsocks" class="headerlink" title="配置Systemd管理Shadowsocks"></a>配置Systemd管理Shadowsocks</h1><p>新建Shadowsocks管理文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/systemd/system/shadowsocks-server.service</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/shadowsocks-server.service</span><br></pre></td></tr></table></figure>
 <p>复制粘贴：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks Server</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/<span class="built_in">local</span>/bin/ssserver -c /etc/shadowsocks/config.json</span><br><span class="line">Restart=on-abort</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></p>
-<p>Ctrl + O保存文件，Ctrl + X退出。</p>
+<p>保存文件并退出。</p>
 <p>启动Shadowsocks：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start shadowsocks-server</span><br></pre></td></tr></table></figure>
 <p>设置开机启动Shadowsocks：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> shadowsocks-server</span><br></pre></td></tr></table></figure>
 <p>查看Shadowsocks状态：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status shadowsocks</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status shadowsocks-server</span><br></pre></td></tr></table></figure>
 <p>至此，Shadowsock服务器端的基本配置已经全部完成了！</p>
 <h1 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h1><p>这部分属于进阶操作，在你使用Shadowsocks时感觉到延迟较大，或吞吐量较低时，可以考虑对服务器端进行优化。</p>
 <h2 id="开启BBR"><a href="#开启BBR" class="headerlink" title="开启BBR"></a>开启BBR</h2><p>BBR系Google最新开发的TCP拥塞控制算法，目前有着较好的带宽提升效果，甚至不比老牌的锐速差。</p>
@@ -526,9 +528,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
-          
             <a href="/tags/Shadowsocks/" rel="tag"><i class="fa fa-tag"></i> Shadowsocks</a>
+          
+            <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
           
         </div>
       
